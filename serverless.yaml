@@ -1,0 +1,40 @@
+# serverless.yml
+
+service: serverless-next
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  apiGateway:
+    shouldStartNameWithService: true
+    binaryMediaTypes:
+      - "*/*"
+
+functions:
+  api:
+    handler: server.handler
+    events:
+      - http: GET /        
+      - http: GET /{proxy+}      
+
+plugins:
+  - serverless-esbuild
+
+package:
+  patterns:
+    - ".next"
+    - "node_modules"
+    - "public"
+    - "_next"
+    - "next.config.js"
+    - "next-i18next.config.js"
+    - "package.json"
+
+custom:
+  esbuild:
+    bundle: true
+    minify: true
+    exclude: "*"
+    external:
+      - "next"
